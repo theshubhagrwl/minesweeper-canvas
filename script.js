@@ -6,7 +6,36 @@ const BOARD_BORDER = "black";
 const CELL_SIZE = 40;
 const CELL_BORDER = "white";
 
-function drawBaord() {
+var matrix = [];
+
+function main() {
+  setDefaultBoard("");
+  drawBoard();
+}
+
+main();
+
+function setDefaultBoard(value) {
+  for (let i = 0; i < 10; i++) {
+    matrix.push([]);
+    for (let j = 0; j < 10; j++) {
+      matrix[i].push(value);
+    }
+  }
+  setMines();
+}
+
+function setMines() {
+  //setting 10 mines
+  for (let i = 0; i < 10; i++) {
+    let mineX = Math.round(Math.random() * 9 + 1);
+    let mineY = Math.round(Math.random() * 9 + 1);
+    matrix[mineX][mineY] = "-1";
+  }
+  console.log(matrix);
+}
+
+function drawBoard() {
   ctx.fillStyle = BOARD_BG;
   ctx.strokeStyle = BOARD_BORDER;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -25,10 +54,8 @@ function getBoxNumber(e) {
   let x = Math.floor(res.x / CELL_SIZE);
   let y = Math.floor(res.y / CELL_SIZE);
   //   console.log(x, y);
-  fillCellOnClick(x, y);
+  matrix[x][y] == "-1" ? fillCellOnClick(x, y, true) : fillCellOnClick(x, y);
 }
-
-drawBaord();
 
 function getMousePos(evt) {
   var rect = canvas.getBoundingClientRect(), // abs. size of element
@@ -41,10 +68,10 @@ function getMousePos(evt) {
   };
 }
 
-function fillCellOnClick(x, y) {
+function fillCellOnClick(x, y, isMine) {
   let c_x = x * 40;
   let c_y = y * 40;
-  ctx.fillStyle = "white";
+  isMine ? (ctx.fillStyle = "red") : (ctx.fillStyle = "white");
   //   ctx.strokeStyle = "black";
   ctx.fillRect(c_x, c_y, CELL_SIZE, CELL_SIZE);
   //   ctx.strokeRect(c_x, c_y, CELL_SIZE, CELL_SIZE);
