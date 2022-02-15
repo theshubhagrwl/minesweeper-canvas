@@ -28,8 +28,8 @@ function setDefaultBoard(value) {
 function setMines() {
   //setting 10 mines
   for (let i = 0; i < 10; i++) {
-    let mineX = Math.round(Math.random() * 9 + 1);
-    let mineY = Math.round(Math.random() * 9 + 1);
+    let mineX = Math.floor(Math.random() * 10);
+    let mineY = Math.floor(Math.random() * 10);
     matrix[mineX][mineY] = "-1";
   }
   console.log(matrix);
@@ -56,20 +56,39 @@ function checkAdjMines(x, y) {
   if (matrix[xCord][yCord] == "-1") {
     //game over
   } else {
-    if (matrix[xCord][yCord] == "") {
-      if (matrix[xCord - 1][yCord - 1] == "-1") sum++;
-      if (matrix[xCord][yCord - 1] == "-1") sum++;
-      if (matrix[xCord + 1][yCord - 1] == "-1") sum++;
-      if (matrix[xCord - 1][yCord] == "-1") sum++;
-      if (matrix[xCord + 1][yCord] == "-1") sum++;
-      if (matrix[xCord - 1][yCord + 1] == "-1") sum++;
-      if (matrix[xCord][yCord + 1] == "-1") sum++;
-      if (matrix[xCord + 1][yCord + 1] == "-1") sum++;
-    }
+    if (
+      xCord - 1 >= 0 &&
+      yCord - 1 >= 0 &&
+      matrix[xCord - 1][yCord - 1] == "-1"
+    )
+      sum++;
+    if (yCord - 1 >= 0 && matrix[xCord][yCord - 1] == "-1") sum++;
+    if (
+      xCord + 1 < 10 &&
+      yCord - 1 >= 0 &&
+      matrix[xCord + 1][yCord - 1] == "-1"
+    )
+      sum++;
+    if (xCord - 1 >= 0 && matrix[xCord - 1][yCord] == "-1") sum++;
+    if (xCord + 1 < 10 && matrix[xCord + 1][yCord] == "-1") sum++;
+    if (
+      xCord - 1 >= 0 &&
+      yCord + 1 < 10 &&
+      matrix[xCord - 1][yCord + 1] == "-1"
+    )
+      sum++;
+    if (yCord + 1 < 10 && matrix[xCord][yCord + 1] == "-1") sum++;
+    if (
+      xCord + 1 < 10 &&
+      yCord + 1 < 10 &&
+      matrix[xCord + 1][yCord + 1] == "-1"
+    )
+      sum++;
 
     ctx.font = "30px cosolas";
     ctx.fillStyle = "green";
     ctx.fillText(sum, x * CELL_SIZE + CELL_SIZE / 2 - 10, y * CELL_SIZE + 30);
+    console.log("Text Filled");
   }
 
   console.log(sum);
@@ -79,8 +98,11 @@ function getBoxNumber(e) {
   let res = getMousePos(e);
   let x = Math.floor(res.x / CELL_SIZE);
   let y = Math.floor(res.y / CELL_SIZE);
-  matrix[x][y] == "-1" ? fillCellOnClick(x, y, true) : fillCellOnClick(x, y);
-  checkAdjMines(x, y);
+  if (x < 10 && y < 10) {
+    // console.log(`x: ${x}, y: ${y}`);
+    matrix[x][y] == "-1" ? fillCellOnClick(x, y, true) : fillCellOnClick(x, y);
+    checkAdjMines(x, y);
+  }
 }
 
 function getMousePos(evt) {
