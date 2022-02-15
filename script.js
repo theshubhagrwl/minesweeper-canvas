@@ -49,12 +49,38 @@ function drawBoard() {
   }
 }
 
+function checkAdjMines(x, y) {
+  let xCord = x;
+  let yCord = y;
+  let sum = 0;
+  if (matrix[xCord][yCord] == "-1") {
+    //game over
+  } else {
+    if (matrix[xCord][yCord] == "") {
+      if (matrix[xCord - 1][yCord - 1] == "-1") sum++;
+      if (matrix[xCord][yCord - 1] == "-1") sum++;
+      if (matrix[xCord + 1][yCord - 1] == "-1") sum++;
+      if (matrix[xCord - 1][yCord] == "-1") sum++;
+      if (matrix[xCord + 1][yCord] == "-1") sum++;
+      if (matrix[xCord - 1][yCord + 1] == "-1") sum++;
+      if (matrix[xCord][yCord + 1] == "-1") sum++;
+      if (matrix[xCord + 1][yCord + 1] == "-1") sum++;
+    }
+
+    ctx.font = "30px cosolas";
+    ctx.fillStyle = "green";
+    ctx.fillText(sum, x * CELL_SIZE + CELL_SIZE / 2 - 10, y * CELL_SIZE + 30);
+  }
+
+  console.log(sum);
+}
+
 function getBoxNumber(e) {
   let res = getMousePos(e);
   let x = Math.floor(res.x / CELL_SIZE);
   let y = Math.floor(res.y / CELL_SIZE);
-  //   console.log(x, y);
   matrix[x][y] == "-1" ? fillCellOnClick(x, y, true) : fillCellOnClick(x, y);
+  checkAdjMines(x, y);
 }
 
 function getMousePos(evt) {
@@ -69,8 +95,8 @@ function getMousePos(evt) {
 }
 
 function fillCellOnClick(x, y, isMine) {
-  let c_x = x * 40;
-  let c_y = y * 40;
+  let c_x = x * CELL_SIZE;
+  let c_y = y * CELL_SIZE;
   isMine ? (ctx.fillStyle = "red") : (ctx.fillStyle = "white");
   //   ctx.strokeStyle = "black";
   ctx.fillRect(c_x, c_y, CELL_SIZE, CELL_SIZE);
