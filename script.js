@@ -7,10 +7,15 @@ const CELL_SIZE = 40;
 const CELL_BORDER = "white";
 
 var matrix = [];
+var isGameOver = false;
 
 function main() {
-  setDefaultBoard("");
-  drawBoard();
+  if (!isGameOver) {
+    setDefaultBoard("");
+    drawBoard();
+  } else {
+    console.log("GAME OVER");
+  }
 }
 
 main();
@@ -88,10 +93,11 @@ function checkAdjMines(x, y) {
     ctx.font = "30px cosolas";
     ctx.fillStyle = "green";
     ctx.fillText(sum, x * CELL_SIZE + CELL_SIZE / 2 - 10, y * CELL_SIZE + 30);
-    console.log("Text Filled");
   }
+}
 
-  console.log(sum);
+function checkForMine(x, y) {
+  return matrix[x][y] == "-1" ? true : false;
 }
 
 function getBoxNumber(e) {
@@ -102,6 +108,12 @@ function getBoxNumber(e) {
     // console.log(`x: ${x}, y: ${y}`);
     matrix[x][y] == "-1" ? fillCellOnClick(x, y, true) : fillCellOnClick(x, y);
     checkAdjMines(x, y);
+    if (checkForMine(x, y)) {
+      isGameOver = true;
+      main(); //calling the main function again to clear the board because we updated the isGameOver variable
+    } else {
+      isGameOver = false;
+    }
   }
 }
 
