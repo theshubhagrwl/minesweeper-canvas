@@ -1,5 +1,7 @@
 var board = document.getElementById("canvas");
 var ctx = board.getContext("2d");
+var restartBtn = document.getElementById("restart-btn");
+var winningMsgBox = document.querySelector(".overlay");
 
 const BOARD_BG = "#8c8c8c";
 const BOARD_BORDER = "black";
@@ -15,10 +17,16 @@ function main() {
     drawBoard();
   } else {
     console.log("GAME OVER");
+    checkForGameOver();
+    isGameOver = false;
   }
 }
 
 main();
+
+function checkForGameOver() {
+  winningMsgBox.style.display = "block";
+}
 
 function setDefaultBoard(value) {
   for (let i = 0; i < 10; i++) {
@@ -104,8 +112,8 @@ function getBoxNumber(e) {
   let res = getMousePos(e);
   let x = Math.floor(res.x / CELL_SIZE);
   let y = Math.floor(res.y / CELL_SIZE);
+
   if (x < 10 && y < 10) {
-    // console.log(`x: ${x}, y: ${y}`);
     matrix[x][y] == "-1" ? fillCellOnClick(x, y, true) : fillCellOnClick(x, y);
     checkAdjMines(x, y);
     if (checkForMine(x, y)) {
@@ -137,4 +145,11 @@ function fillCellOnClick(x, y, isMine) {
   //   ctx.strokeRect(c_x, c_y, CELL_SIZE, CELL_SIZE);
 }
 
-document.addEventListener("click", getBoxNumber);
+board.addEventListener("click", getBoxNumber);
+
+restartBtn.addEventListener("click", () => {
+  // board.removeEventListener("click", getBoxNumber);
+  winningMsgBox.style.display = "none";
+  console.log("Hello");
+  main();
+});
